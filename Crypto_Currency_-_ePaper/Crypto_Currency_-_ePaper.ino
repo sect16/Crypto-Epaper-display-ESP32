@@ -15,6 +15,7 @@
 #include "freertos/task.h"
 #include "epd_driver.h"
 #include "firasans.h"
+#include "OpenSans8B.h"
 #include "esp_adc_cal.h"
 #include <Wire.h>
 #include <SPI.h>
