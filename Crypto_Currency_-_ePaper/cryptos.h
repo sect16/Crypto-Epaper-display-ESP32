@@ -1,5 +1,5 @@
 struct Price {
-  double inr;
+  double usd;
   String btc;
   String eth;
 };
@@ -23,8 +23,13 @@ struct Crypto
 Crypto cryptos[] = {
     {"bitcoin"},
     {"ethereum"},
-    {"dogecoin"},
-    {"tether"},
+    {"cortex"},
+    {"solana"},
+    {"cardano"},
+    {"apenft"},
+    {"harmony"},
+    {"mdex"},
+    {"uniswap"},
  };
 
 int cryptosCount = (sizeof(cryptos) / sizeof(cryptos[0]));
