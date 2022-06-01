@@ -1,9 +1,6 @@
 // ----------------------------
 // Functions used to download data from coingecko retrieve are separated in this file
 // ----------------------------
-
-
-
 const char* rootCACertificate = \
 "-----BEGIN CERTIFICATE-----\n" \
 "MIIDdzCCAl+gAwIBAgIEAgAAuTANBgkqhkiG9w0BAQUFADBaMQswCQYDVQQGEwJJ\n" \
@@ -27,13 +24,12 @@ const char* rootCACertificate = \
 "R9I4LtD+gdwyah617jzV/OeBHRnDJELqYzmp\n" \
 "-----END CERTIFICATE-----";
 
-
-
-
 HTTPClient http;
 WiFiClientSecure client;
 
 const char *coingeckoSslFingerprint = "8925605d5044fcc0852b98d7d3665228684de6e2";
+
+extern String date;
 
 String combineCryptoCurrencies()
 {
@@ -59,6 +55,7 @@ int getCryptoIndexById(String id)
     if (cryptos[i].apiName == id)
       return i;
   }
+  return 0;
 }
 
 void downloadBtcAndEthPrice()
@@ -74,6 +71,10 @@ void downloadBtcAndEthPrice()
   client.connect("api.coingecko.com", 443);
   http.begin(client, apiUrl);
 
+  const char * headerKeys[] = {"date"};
+  const size_t numberOfHeaders = 1;
+  http.collectHeaders(headerKeys, numberOfHeaders);
+
   int code = http.GET();
   if (code != HTTP_CODE_OK)
   {
@@ -83,6 +84,20 @@ void downloadBtcAndEthPrice()
   }
 
   Serial.println("Successfuly downloaded BTC and ETH data");
+
+  
+//  const char * headerKeys[] = {"date", "server"};
+//  const size_t numberOfHeaders = 2;
+//  http.collectHeaders(headerKeys, numberOfHeaders);
+
+
+  date = http.header("date");
+  Serial.print("headerDate: ");
+  Serial.println(date);
+   
+//  String headerServer = http.header("server");
+//  Serial.print("headerServer: ");
+//  Serial.println(headerServer);
 
   StaticJsonDocument<512> filter;
 
@@ -164,8 +179,8 @@ void downloadBaseData(String vsCurrency)
     int cryptoIndex = getCryptoIndexById(id);
 
     double currentPrice = json["current_price"];
-    cryptos[cryptoIndex].price.inr = currentPrice;
-
+    cryptos[cryptoIndex].price.usd = currentPrice;
+    
     String symbol = json["symbol"];
     symbol.toUpperCase();
     double dayChange = json["price_change_percentage_24h_in_currency"];
